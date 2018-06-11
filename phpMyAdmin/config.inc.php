@@ -28,8 +28,8 @@ $i++;
 /* Authentication type */
 $cfg['Servers'][$i]['auth_type'] = 'cookie';
 /* Server parameters */ 
-$cfg['Servers'][$i]['host'] = getenv('OPENSHIFT_MYSQL_DB_HOST'); // MySQL hostname or IP address 
-$cfg['Servers'][$i]['port'] = getenv('OPENSHIFT_MYSQL_DB_PORT'); // MySQL port - leave blank for default port 
+$cfg['Servers'][$i]['host'] = getenv('MYSQL_SERVICE_HOST'); // MySQL hostname or IP address 
+$cfg['Servers'][$i]['port'] = getenv('MYSQL_SERVICE_PORT'); // MySQL port - leave blank for default port 
 $cfg['Servers'][$i]['compress'] = false;
 $cfg['Servers'][$i]['AllowNoPassword'] = false;
 
