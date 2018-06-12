@@ -1,11 +1,8 @@
 <?php
   $servername = getenv('MYSQL_SERVICE_HOST');
-  $username = getenv('OPENSHIFT_MYSQL_DB_USERNAME');
-  $password = getenv('MYSQL_PASSWORD');
-  $database = getenv('MYSQL_DATABASE');
-
-  $json = array("servername" => $servername, "username" => $username, "database" => $database);
-  echo json_encode($json);
+  $username = 'user6UN';
+  $password = 'uGfGbYo1BaOabiw2';
+  $database = 'sampledb';
 
   try {
     $conn = new mysqli($servername, $username, $password, $database);
