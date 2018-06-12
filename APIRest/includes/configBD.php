@@ -4,6 +4,9 @@
   $password = getenv('MYSQL_PASSWORD');
   $database = getenv('MYSQL_DATABASE');
 
+  $json = array("servername" => $servername, "username" => $username, "database" => $database);
+  echo json_encode($json);
+
   try {
     $conn = new mysqli($servername, $username, $password, $database);
 
