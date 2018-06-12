@@ -28,7 +28,9 @@ $i++;
 /* Authentication type */
 $cfg['Servers'][$i]['auth_type'] = 'cookie';
 /* Server parameters */ 
-$cfg['Servers'][$i]['host'] = '172.30.133.27:3306';
+ 
+$cfg['Servers'][$i]['host'] = getenv('MYSQL_SERVICE_HOST');
+$cfg['Servers'][$i]['port'] = getenv('MYSQL_SERVICE_PORT'); 
 $cfg['Servers'][$i]['compress'] = false;
 $cfg['Servers'][$i]['AllowNoPassword'] = false;
 
