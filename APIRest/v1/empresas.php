@@ -7,10 +7,6 @@
   include_once '../includes/configBD.php';
   include_once '../includes/authenticated.php';
 
-  echo 'a';
-  echo $_SERVER['PHP_AUTH_USER'];
-  echo 'a';
-
   $auth = new Authenticate();
 
   $numRows = $auth->auth($conn);
