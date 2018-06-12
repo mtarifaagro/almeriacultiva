@@ -6,7 +6,6 @@
     var $sql;
     
     function auth($conn){
-      return 1;
       if (!isset($_SERVER['PHP_AUTH_USER'])) {
         return -1;
       } else{
