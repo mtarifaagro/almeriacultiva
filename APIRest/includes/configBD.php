@@ -1,6 +1,6 @@
 <?php
   $servername = getenv('MYSQL_SERVICE_HOST');
-  $username = getenv('MYSQL_USER');
+  $username = getenv('OPENSHIFT_MYSQL_DB_USERNAME');
   $password = getenv('MYSQL_PASSWORD');
   $database = getenv('MYSQL_DATABASE');
 
