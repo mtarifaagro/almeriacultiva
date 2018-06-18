@@ -7,8 +7,8 @@
   include_once '../includes/configBD.php';
   include_once '../includes/authenticated.php';
 
-  echo 'PHP_AUTH_USER' $_SERVER['PHP_AUTH_USER'];
-  echo 'PHP_AUTH_PW' $_SERVER['PHP_AUTH_PW'];
+  echo 'PHP_AUTH_USER' . $_SERVER['PHP_AUTH_USER'];
+  echo 'PHP_AUTH_PW' . $_SERVER['PHP_AUTH_PW'];
 
   $auth = new Authenticate();
 
