@@ -1,16 +1,8 @@
-<?php
-/* 
-  //000webhost
-  $servername = "localhost";
-  $username = "id5661954_agroprecios";
-  $password = "2508Agro.5";
-  $database = "id5661954_ap1";
-*/
-  //x10Hosting
-  $servername = "localhost";
-  $username = "almeriac_miguel";
-  $password = "2508Agro.5";
-  $database = "almeriac_01";
+<?php 
+  $servername = getenv('MYSQL_SERVICE_HOST'); 
+  $username = 'user6UN'; 
+  $password = 'uGfGbYo1BaOabiw2'; 
+  $database = 'sampledb'; 
 
   try {
     $conn = new mysqli($servername, $username, $password, $database);
