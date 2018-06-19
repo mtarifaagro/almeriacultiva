@@ -11,18 +11,19 @@
 
   $numRows = $auth->auth($conn);
   if ($numRows == 1){
-    echo '2';
+    echo '1';
     $result = array();
     $res = $conn->query("SELECT pro_id, pro_nombre, pro_imagen 
                          FROM Productos 
                          Where pro_activo = 'Y' ");
     while($f = $res->fetch_object()){
+      echo '2';
       $result[] = array("id" => $f->pro_id, 
                         "nombre" => $f->pro_nombre, 
                         "imagen" => $f->pro_imagen); 
     }
     $json = array("status" => 0, "info" => $result);
-    echo '2';
+    echo '3';
     echo json_encode($json);
   } else {
     header('WWW-Authenticate: Basic realm="LOGIN REQUIRED"');
