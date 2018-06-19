@@ -14,7 +14,7 @@
     $result = array();
     $res = $conn->query("SELECT pro_id, pro_nombre, pro_imagen 
                          FROM Productos 
-                         Where pro_activo = 'Y' ");
+                         WHERE pro_activo = 'Y'  ");
     while($f = $res->fetch_object()){
       $result[] = array("id" => $f->pro_id, 
                         "nombre" => $f->pro_nombre, 
