@@ -11,6 +11,7 @@
 
   $numRows = $auth->auth($conn);
   if ($numRows == 1){
+    echo '2';
     $result = array();
     $res = $conn->query("SELECT pro_id, pro_nombre, pro_imagen 
                          FROM Productos 
@@ -21,15 +22,11 @@
                         "imagen" => $f->pro_imagen); 
     }
     $json = array("status" => 0, "info" => $result);
- 
+    echo '2';
     echo json_encode($json);
   } else {
     header('WWW-Authenticate: Basic realm="LOGIN REQUIRED"');
     header('HTTP/1.0 401 Unauthorized');
   }
-
-  $json = array("status" => 0, "info" => "mierda");
- 
-  echo json_encode($json);
 
 ?>
