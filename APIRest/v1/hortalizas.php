@@ -1,4 +1,4 @@
-<?php 
+<?php
   header("Access-Control-Allow-Origin: *");
   header("Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS");
   header("Access-Control-Allow-Headers: X-Requested-With, Origin, Content-Type, X-Auth-Token, Authorization, Accept");
@@ -7,21 +7,25 @@
   include_once '../includes/configBD.php';
   include_once '../includes/authenticated.php';
 
+  $json = array("status" => 0, "info" => "mierda");
+ 
+  echo json_encode($json);
+
   $auth = new Authenticate();
 
   $numRows = $auth->auth($conn);
   if ($numRows == 1){
     $result = array();
-    $res = $conn->query("SELECT pro_id, pro_nombre, pro_imagen
+    $res = $conn->query("SELECT pro_id, pro_nombre, pro_imagen 
                          FROM Productos 
-                         Where  pro_activo = 'Y' ");
+                         Where pro_activo = 'Y' ");
     while($f = $res->fetch_object()){
       $result[] = array("id" => $f->pro_id, 
                         "nombre" => $f->pro_nombre, 
                         "imagen" => $f->pro_imagen); 
     }
     $json = array("status" => 0, "info" => $result);
-
+ 
     echo json_encode($json);
   } else {
     header('WWW-Authenticate: Basic realm="LOGIN REQUIRED"');
