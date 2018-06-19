@@ -7,10 +7,6 @@
   include_once '../includes/configBD.php';
   include_once '../includes/authenticated.php';
 
-  $json = array("status" => 0, "info" => "mierda");
- 
-  echo json_encode($json);
-
   $auth = new Authenticate();
 
   $numRows = $auth->auth($conn);
@@ -31,5 +27,9 @@
     header('WWW-Authenticate: Basic realm="LOGIN REQUIRED"');
     header('HTTP/1.0 401 Unauthorized');
   }
+
+  $json = array("status" => 0, "info" => "mierda");
+ 
+  echo json_encode($json);
 
 ?>
