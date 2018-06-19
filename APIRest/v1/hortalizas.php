@@ -16,9 +16,9 @@
                          FROM Productos 
                          Where pro_activo = 'Y' ");
     while($f = $res->fetch_object()){
-      $result[] = array("id" => $f->emp_id, 
-                        "nombre" => $f->emp_nombre, 
-                        "imagen" => $f->emp_imagen); 
+      $result[] = array("id" => $f->pro_id, 
+                        "nombre" => $f->pro_nombre, 
+                        "imagen" => $f->pro_imagen); 
     }
     $json = array("status" => 0, "info" => $result);
  
