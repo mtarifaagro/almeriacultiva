@@ -4,7 +4,7 @@
   class Authenticate{ 
        
     var $sql;
-    
+
     function auth($conn){
       if (!isset($_SERVER['PHP_AUTH_USER'])) {
         return -1;

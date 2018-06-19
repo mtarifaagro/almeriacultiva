@@ -27,8 +27,8 @@
  
     echo json_encode($json);
   } else {
-    header('WWW-Authenticate: Basic ""');
-    header('HTTP/1.0 403 Unauthorized');
+    header('WWW-Authenticate: Basic realm="LOGIN REQUIRED"');
+    header('HTTP/1.0 401 Unauthorized');
   }
 
 ?>
