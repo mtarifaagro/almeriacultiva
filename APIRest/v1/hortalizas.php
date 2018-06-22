@@ -11,16 +11,18 @@
 
   $numRows = $auth->auth($conn);
   if ($numRows == 1){
-    $arrayHoralizas = array();
-    $res = $conn->query("SELECT pro_id, pro_nombre, pro_imagen FROM Productos WHERE pro_activo = 'Y' ");
+    $result = array();
+    $res = $conn->query("SELECT pro_id, pro_nombre, pro_imagen 
+                         FROM Productos 
+                         WHERE pro_activo = 'Y' ");
     while($f = $res->fetch_object()){
-//echo $f->pro_id . ' - ' . $f->pro_nombre . ' - ' . $f->pro_imagen;
-      $arrayHoralizas[] = array("id" => $f->pro_id, 
+      //echo $f->pro_id . ' - ' . $f->pro_nombre . ' - ' . $f->pro_imagen;
+      $result[] = array("id" => $f->pro_id, 
                         "nombre" => $f->pro_nombre, 
                         "imagen" => $f->pro_imagen); 
     }
-    $json = array("status" => 0, "info" => $arrayHoralizas);
- 
+    $json = array("status" => 0, "info" => $result);
+    echo 'count() => ' . count($result);
     echo json_encode($json);
   } else {
     header('WWW-Authenticate: Basic realm="LOGIN REQUIRED"');
