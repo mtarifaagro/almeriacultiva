@@ -1,8 +1,8 @@
 <?php 
   $servername = getenv('MYSQL_SERVICE_HOST'); 
-  $username = 'userAJA'; 
-  $password = 'NmcfYaOB3InWfuur'; 
-  $database = 'almeriacultiva'; 
+  $username = 'userDVT'; 
+  $password = 'CLS5GQkiAU1lv7WO'; 
+  $database = 'sampledb'; 
 
   try {
     $conn = new mysqli($servername, $username, $password, $database);
