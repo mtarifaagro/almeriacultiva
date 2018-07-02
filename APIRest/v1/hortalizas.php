@@ -21,8 +21,6 @@
                         "imagen" => $f->pro_imagen); 
     }
     $json = array("status" => 0, "info" => $result);
-    echo 'result.count() => ' . count($result);
-    echo 'json.count() => ' . count($json);
     echo json_encode($json);
   } else {
     header('WWW-Authenticate: Basic realm="LOGIN REQUIRED"');
