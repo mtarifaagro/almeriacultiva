@@ -1,7 +1,7 @@
 <?php 
   $servername = getenv('MYSQL_SERVICE_HOST'); 
-  $username = 'userDVT'; 
-  $password = 'CLS5GQkiAU1lv7WO'; 
+  $username = 'userI72'; 
+  $password = 'Ytklr1liCCb0BcQe'; 
   $database = 'sampledb'; 
 
   try {
