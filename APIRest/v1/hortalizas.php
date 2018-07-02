@@ -16,7 +16,6 @@
                          FROM Productos 
                          WHERE pro_activo = 'Y' ");
     while($f = $res->fetch_object()){
-      //echo $f->pro_id . ' - ' . $f->pro_nombre . ' - ' . $f->pro_imagen;
       $result[] = array("id" => $f->pro_id, 
                         "nombre" => $f->pro_nombre, 
                         "imagen" => $f->pro_imagen); 
