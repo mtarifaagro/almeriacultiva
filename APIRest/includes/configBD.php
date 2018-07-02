@@ -6,6 +6,7 @@
 
   try {
     $conn = new mysqli($servername, $username, $password, $database);
+    $conn->set_charset("utf8");
 
     if ($conn->connect_error) {
       $json = array("status" => 1, "info" => $conn->connect_error);
