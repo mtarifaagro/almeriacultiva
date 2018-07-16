@@ -1,11 +1,13 @@
 <?php 
   $servername = getenv('MYSQL_SERVICE_HOST'); 
-  $username = 'user6UN'; 
-  $password = 'uGfGbYo1BaOabiw2'; 
+  $username = 'userI72'; 
+  //$username = getenv('MYSQL_USER');
+  $password = 'Ytklr1liCCb0BcQe'; 
   $database = 'sampledb'; 
 
   try {
     $conn = new mysqli($servername, $username, $password, $database);
+    $conn->set_charset("utf8");
 
     if ($conn->connect_error) {
       $json = array("status" => 1, "info" => $conn->connect_error);
