@@ -1,38 +1,20 @@
 <?php 
-$destinatario = "m.tarifa.agro@gmail.com"; 
+$myEmail = "m.tarifa.agro@gmail.com"; 
 $asunto = "Este mensaje es de prueba"; 
-$cuerpo = ' 
-<html> 
-<head> 
-   <title>Prueba de correo</title> 
-</head> 
-<body> 
-<h1>Prueba de correo</h1> 
-<p> 
-<b>Prueba de correo 
-</p> 
-</body> 
-</html> 
-'; 
 
-//para el envío en formato HTML 
-$headers = "MIME-Version: 1.0\r\n"; 
-$headers .= "Content-type: text/html;"; 
+// make sure you get these SMTP settings right
+$transport = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, "ssl") 
+    ->setUsername($myEmail)
+    ->setPassword('2508Agro.5');
 
-//dirección del remitente 
-$headers .= "From: Almeria Cultiva<m.tarifa.agro@gmail.com>\r\n"; 
+$mailer = Swift_Mailer::newInstance($transport);
 
-//dirección de respuesta, si queremos que sea distinta que la del remitente 
-$headers .= "Reply-To: m.tarifa.agro@gmail.com\r\n"; 
+// the message itself
+$message = Swift_Message::newInstance('email subject')
+    ->setFrom(array('noreply@AlmeriaCultiva.com' => 'no reply'))
+    ->setTo(array($myEmail))
+    ->setBody("email body");
 
-//ruta del mensaje desde origen a destino 
-//$headers .= "Return-path: m.tarifa.agro@gmail.com\r\n"; 
+$result = $mailer->send($message);
 
-//direcciones que recibián copia 
-//$headers .= "Cc: m.tarifa.agro@gmail.com\r\n"; 
-
-//direcciones que recibirán copia oculta 
-//$headers .= "Bcc: m.tarifa.agro@gmail.com\r\n"; 
-
-mail($destinatario,$asunto,$cuerpo,$headers) 
 ?>
