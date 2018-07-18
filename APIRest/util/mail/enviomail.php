@@ -1,4 +1,6 @@
 <?php 
+require_once 'lib/swift_required.php';
+
 $myEmail = "m.tarifa.agro@gmail.com"; 
 $asunto = "Este mensaje es de prueba"; 
 
