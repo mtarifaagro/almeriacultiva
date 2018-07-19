@@ -1,26 +1,26 @@
 <?php 
-  include "class.phpmailer.php"; 
-  include "class.smtp.php"; 
+  include "/src/phpmailer.php"; 
+  include "/src/smtp.php"; 
    
+  $from_name = "Almeria Cultiva"; 
   $email_user = "m.tarifa.agro@gmail.com"; 
   $email_password = "2508Agro.5"; 
   $the_subject = "PHPmailer prueba"; 
   $address_to = "m.tarifa.agro@gmail.com"; 
-  $from_name = "PHPmailer"; 
+
   $phpmailer = new PHPMailer(); 
    
   $phpmailer->Username = $email_user; 
   $phpmailer->Password = $email_password;  
   
-  // $phpmailer->SMTPDebug = 1; 
   $phpmailer->SMTPSecure = 'ssl'; 
-  $phpmailer->Host = "smtp.gmail.com"; // GMail 
+  $phpmailer->Host = "smtp.gmail.com";
   $phpmailer->Port = 465; 
-  $phpmailer->IsSMTP(); // use SMTP 
+  $phpmailer->IsSMTP();
   $phpmailer->SMTPAuth = true; 
    
   $phpmailer->setFrom($phpmailer->Username,$from_name); 
-  $phpmailer->AddAddress($address_to); // recipients email 
+  $phpmailer->AddAddress($address_to);
    
   $phpmailer->Subject = $the_subject;	 
   $phpmailer->Body .="<h1>PHPmailer!</h1>"; 
