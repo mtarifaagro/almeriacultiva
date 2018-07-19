@@ -1,6 +1,5 @@
 <?php 
-  include "/src/phpmailer.php"; 
-  include "/src/smtp.php"; 
+  include_once 'src/phpmailer.php';
    
   $from_name = "Almeria Cultiva"; 
   $email_user = "m.tarifa.agro@gmail.com"; 
