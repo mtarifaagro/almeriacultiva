@@ -1,9 +1,8 @@
 <?php 
   //include_once 'src/phpmailer.php';
-  use PHPMailer\src\PHPMailer;
-  use PHPMailer\src\Exception;
+  use PHPMailer\PHPMailer\PHPMailer;
   
-  $phpmailer = new PHPMailer(); 
+  $phpmailer = new PHPMailer; 
   try {
     $from_name = "Almeria Cultiva"; 
     $email_user = "m.tarifa.agro@gmail.com"; 
