@@ -1,9 +1,12 @@
 <?php 
   $servername = getenv('MYSQL_SERVICE_HOST'); 
-  $username = 'userI72'; 
-  //$username = getenv('MYSQL_USER');
-  $password = 'Ytklr1liCCb0BcQe'; 
   $database = 'sampledb'; 
+  $username = 'userF04'; 
+  $password = 'DTbnv5R63jiVihVS'; 
+
+  //$database = getenv('MYSQL_DATABASE');
+  //$username = getenv('MYSQL_USER');
+  //$password = getenv('MYSQL_PASSWORD');
 
   try {
     $conn = new mysqli($servername, $username, $password, $database);
