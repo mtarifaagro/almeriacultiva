@@ -8,4 +8,6 @@
        '$database ' . $database . '\n' .
        '$username ' . $username . '\n' .
        '$password ' . $password;
+
+  print_r($_ENV);
 ?>
