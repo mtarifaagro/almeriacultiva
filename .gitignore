@@ -1,2 +1,5 @@
 ._AlmeeriaCultivaServidor.code-workspace
 AlmeeriaCultivaServidor.code-workspace
+.DS_Store
+Tablas.sql
+APIRest/.DS_Store
