@@ -39,12 +39,12 @@
     $mail->msgHTML($message);
 
     if (!$mail->send()){
-      echo 'Mailer Error: ' . $mail->ErrorInfo;
+      echo 'Mailer Error: ' . $mail->ErrorInfo . ' ' . $email;
     }else{
       echo 'ok';
     }
   } catch (Exception $e) { 
-    echo 'Mailer Error: ' . $mail->ErrorInfo;
+    echo 'Mailer Error: ' . $mail->ErrorInfo . ' ' . $email;
   }
 ?>
 
