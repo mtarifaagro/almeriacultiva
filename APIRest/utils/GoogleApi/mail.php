@@ -45,12 +45,12 @@
     $mail->msgHTML($message);
 
     if (!$mail->send()){
-      echo 'Mailer Error: ' . $mail->ErrorInfo . ' ' . $email . ' ' . $password;
+      echo 'Mailer Error: ' . $mail->ErrorInfo;
     }else{
       echo 'ok';
     }
   } catch (Exception $e) { 
-    echo 'Mailer Error: ' . $mail->ErrorInfo . ' ' . $email . ' ' . $password;
+    echo 'Mailer Error: ' . $mail->ErrorInfo;
   }
 ?>
 
