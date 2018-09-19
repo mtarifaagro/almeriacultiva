@@ -16,6 +16,10 @@
   try {
     $email     = getenv('APP_EMAIL');
     $password  = getenv('APP_EMAIL_PASSWORD');
+
+
+    echo 'Mailer params: ' . 'email: ' . $email . ' - password: ' . $password . '#';
+
     $mailvalid = $_POST['mailvalid'];
     $subject   = $_POST['subject'];
     $message   = 'Email enviado por ' . $mailvalid . '<br/>'
