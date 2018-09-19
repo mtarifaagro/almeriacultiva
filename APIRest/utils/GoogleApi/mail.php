@@ -23,7 +23,8 @@
                  . $_POST['message'];
 
     // Configuring SMTP server settings
-    $mail = new PHPMailer(false);
+    //$mail = new PHPMailer(false);
+    $mail = new PHPMailer(true);
     $mail->isSMTP();
     $mail->Host = 'smtp.gmail.com';
     $mail->Port = 587;
@@ -31,6 +32,7 @@
     $mail->SMTPAuth = true;
     $mail->Username = $email;
     $mail->Password = $password;
+    $mail->SMTPDebug = 2;
  
     // Email Sending Details
     $mail->setFrom($email, 'Almeria Cultiva');
@@ -39,12 +41,12 @@
     $mail->msgHTML($message);
 
     if (!$mail->send()){
-      echo 'Mailer Error: ' . $mail->ErrorInfo . ' ' . $email;
+      echo 'Mailer Error: ' . $mail->ErrorInfo . ' ' . $email . ' ' . $password;
     }else{
       echo 'ok';
     }
   } catch (Exception $e) { 
-    echo 'Mailer Error: ' . $mail->ErrorInfo . ' ' . $email;
+    echo 'Mailer Error: ' . $mail->ErrorInfo . ' ' . $email . ' ' . $password;
   }
 ?>
 
