@@ -1,8 +1,8 @@
 <?php  
-  header('Content-Type: text/html; charset=utf-8');
   header("Access-Control-Allow-Origin: *");
   header("Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS");
   header("Access-Control-Allow-Headers: X-Requested-With, Origin, Content-Type, X-Auth-Token, Authorization, Accept");
+  header("Content-Type: application/json");
 
   use PHPMailer\PHPMailer\PHPMailer;
   use PHPMailer\PHPMailer\Exception;
@@ -41,12 +41,12 @@
     $mail->msgHTML($message);
 
     if (!$mail->send()){
-      echo 'Mailer Error: ' . $mail->ErrorInfo;
+      echo json_encode(array("status" => 1, "info" => 'Mailer Error: ' . $mail->ErrorInfo));
     }else{
-      echo 'ok';
+      echo json_encode(array("status" => 0, "info" => 'OK'));
     }
   } catch (Exception $e) { 
-    echo 'Mailer Error: ' . $mail->ErrorInfo;
+    echo json_encode(array("status" => 1, "info" => 'Mailer Error: ' . $mail->ErrorInfo));
   }
 ?>
 
