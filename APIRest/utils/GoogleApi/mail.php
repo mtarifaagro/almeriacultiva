@@ -14,6 +14,10 @@
   require 'google-api-php-client/vendor/autoload.php';
 
   try {
+    while ($post = each($_POST)) {
+      echo $post[0] . " = " . $post[1];
+    }
+    
     $email     = getenv('APP_EMAIL');
     $password  = getenv('APP_EMAIL_PASSWORD');
     $mailvalid = $_POST['mailvalid'];
