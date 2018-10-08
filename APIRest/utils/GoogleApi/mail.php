@@ -52,7 +52,10 @@
       echo json_encode(array("status" => 0, "info" => 'OK'));
     }
   } catch (Exception $e) { 
-    echo json_encode(array("status" => 1, "info" => 'Mailer Error: ' . $mail->ErrorInfo));
+    while ($post = each($_POST)) {
+      echo $post[0] . " = " . $post[1];
+    }
+    echo json_encode(array("status" => 2, "info" => 'Mailer Error: ' . $mail->ErrorInfo));
   }
 ?>
 
