@@ -41,7 +41,7 @@
     //$mail->SMTPDebug = 2;
  
     // Email Sending Details
-    $mail->setFrom($email, 'Almeria Cultiva');
+    $mail->setFrom($email);
     $mail->addAddress($email);
     $mail->Subject = 'Contacto Almeria Cultiva App';
     $mail->msgHTML($message);
