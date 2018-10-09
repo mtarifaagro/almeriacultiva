@@ -29,8 +29,8 @@
   //http://www.nikola-breznjak.com/blog/javascript/ionic2/posting-data-from-ionic-2-app/
 
     // Configuring SMTP server settings
-    //$mail = new PHPMailer(false);
-    $mail = new PHPMailer(true);
+    $mail = new PHPMailer(false);
+    //$mail = new PHPMailer(true);
     $mail->isSMTP();
     $mail->Host = 'smtp.gmail.com';
     $mail->Port = 587;
@@ -38,7 +38,7 @@
     $mail->SMTPAuth = true;
     $mail->Username = $email;
     $mail->Password = $password;
-    $mail->SMTPDebug = 2;
+    //$mail->SMTPDebug = 2;
  
     // Email Sending Details
     $mail->setFrom($email);
