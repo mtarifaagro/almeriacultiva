@@ -14,10 +14,6 @@
   require 'google-api-php-client/vendor/autoload.php';
 
   try {
-    while ($post = each($_POST)) {
-      echo $post[0] . " = " . $post[1];
-    }
-    
     $email     = getenv('APP_EMAIL');
     $password  = getenv('APP_EMAIL_PASSWORD');
     $mailvalid = $_POST['mailvalid'];
@@ -26,8 +22,6 @@
                  . 'Asunto: ' . $subject . '<br/>'
                  . $_POST['message'];
     
-  //http://www.nikola-breznjak.com/blog/javascript/ionic2/posting-data-from-ionic-2-app/
-
     // Configuring SMTP server settings
     $mail = new PHPMailer(false);
     //$mail = new PHPMailer(true);
