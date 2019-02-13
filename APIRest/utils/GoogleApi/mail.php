@@ -25,8 +25,6 @@
     $message   = 'Email enviado por ' . $mailvalid . '<br/>'
                  . 'Asunto: ' . $subject . '<br/>'
                  . $_POST['message'];
-    
-  //http://www.nikola-breznjak.com/blog/javascript/ionic2/posting-data-from-ionic-2-app/
 
     // Configuring SMTP server settings
     $mail = new PHPMailer(false);
