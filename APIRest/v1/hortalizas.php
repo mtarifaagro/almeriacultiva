@@ -6,7 +6,7 @@
 
   include_once '../includes/configBD.php';
   include_once '../includes/authenticated.php';
-  echo 'prueba';
+  
   $auth = new Authenticate();
   $numRows = $auth->auth($conn);
   if ($numRows == 1){
