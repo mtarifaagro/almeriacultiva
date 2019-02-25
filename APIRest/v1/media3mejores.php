@@ -20,7 +20,7 @@
       $lstprecio = $conn->query("SELECT pre_id, pre_fecha
                                  FROM Precios
                                  WHERE pre_pro_emp = ".$proemp->pem_id."
-                                 ORDER BY pre_fecha LIMIT 7");
+                                 ORDER BY pre_fecha DESC LIMIT 7");
       while($precio = $lstprecio->fetch_object()){
       
         $lstmedia = $conn->query("SELECT AVG(cor_precio) media
