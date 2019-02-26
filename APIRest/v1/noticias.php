@@ -12,10 +12,19 @@
   $numRows = $auth->auth($conn);
   if ($numRows == 1){
     $result = array();
-    $fecha = $_REQUEST['fecha'];
-    $res = $conn->query("SELECT not_id, not_titular, not_textocorto, not_texto, not_link, not_textolink, not_imagen
-                         FROM Noticias
-                         Order by not_id desc");
+
+    $offSet = $_REQUEST['offSet'];
+
+    $consulta = "SELECT * 
+                 FROM ( SELECT *
+                        FROM Noticias
+                        ORDER BY not_id DESC) D
+                  Limit 2 ";
+    if ($offSet) {
+      $consulta = $consulta . " OFFSET " . $offSet;
+    }
+
+    $res = $conn->query($consulta);
     while($f = $res->fetch_object()){
       $result[] = array("id" => $f->not_id,
                         "titular" => $f->not_titular, 
