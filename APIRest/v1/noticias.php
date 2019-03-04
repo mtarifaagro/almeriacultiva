@@ -32,7 +32,8 @@
                         "texto" => $f->not_texto, 
                         "link" => $f->not_link,
                         "textolink" => $f->not_textolink,
-                        "imagen" => $f->not_imagen); 
+                        "imagen" => $f->not_imagen,
+                        "fecha" => $f->not_fecha); 
     }
     $json = array("status" => 0, "info" => $result);
  
