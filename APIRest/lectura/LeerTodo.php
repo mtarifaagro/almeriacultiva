@@ -23,61 +23,78 @@
         
             $div = $dom->getElementById('pro-ver'); 
             $tables = $div->getElementsByTagName('table'); 
-        
-            $rows = $tables->item(0)->getElementsByTagName('tr'); 
-        
-            $contador = 0;
-            foreach ($rows as $row) 
-            {        
-                if ($contador !== 0){
-                    $cols = $row->getElementsByTagName('td'); 
-                    
-                    if ($cols->item(0)->nodeValue !== "SUBASTAS" && $cols->item(1)->nodeValue !== ""){
-                        $resProdEmp = $conn->query("SELECT pem_id 
-                                                    FROM Productos_Empresas 
-                                                    Join Empresas on emp_id = pem_idemp
-                                                    Where pem_idpro = ".$f->pro_id." 
-                                                      and Upper(emp_etiqueta) = Upper('".$cols->item(0)->nodeValue."')");
-                        $prodEmp = $resProdEmp->fetch_object();
 
-                        $resPrecios = $conn->query("SELECT pre_id
-                                                    FROM Precios 
-                                                    Where pre_pro_emp = ".$prodEmp->pem_id." 
-                                                      and pre_fecha = '" . $Fecha . "'");
-                                                      
-                        $totalFilas = $resPrecios->num_rows;
-                        if ($totalFilas === 0) {
-                            $PrecioInsertado = $conn->query("INSERT INTO Precios (pre_pro_emp, pre_fecha) 
-                                                             VALUES ('".$prodEmp->pem_id."', '".$Fecha."')");
-                            
-                            $consulta = "SELECT pre_id
-                                         FROM Precios 
-                                         Where pre_pro_emp = ".$prodEmp->pem_id." 
-                                           and pre_fecha = '".$Fecha."'";
-                            try {
-                                $resPrecios2 = $conn->query($consulta);
-                                $precio = $resPrecios2->fetch_object();
-                            } catch (Exception $e) {
-                                echo 'Excepción capturada: ', $e->getMessage(), "\n";
-                            }
-                            
-                            if ($precio->pre_id > 0) {
-                                $numCorte = 0;
-                                foreach ($cols as $col){
-                                    if ($numCorte === 0){
-                                        $numCorte ++;
-                                    } elseif ($col->nodeValue !== "") {
-                                        $conn->query("INSERT INTO Cortes (cor_idpre, cor_corte, cor_precio) 
-                                                      VALUES ('".$precio->pre_id."', '".$numCorte."', '".$col->nodeValue."')");
-                                        $numCorte ++;
+            $classname="fec";
+            $finder = new DomXPath($dom);
+            $nodes = $finder->query("//*[contains(@class, '$classname')]");
+
+            foreach ($nodes as $node) 
+            {
+                $miFecha = $node->nodeValue;
+            }
+
+            $miFecha = html_entity_decode($miFecha);
+            $miFecha = preg_replace("/\s/",'',$miFecha);
+            $miFecha = htmlentities($miFecha, null, 'utf-8');
+            $miFecha = str_replace("&nbsp;", "", $miFecha);
+
+            if ($miFecha === date("d-m-Y")){
+
+                $rows = $tables->item(0)->getElementsByTagName('tr'); 
+        
+                $contador = 0;
+                foreach ($rows as $row) 
+                {        
+                    if ($contador !== 0){
+                        $cols = $row->getElementsByTagName('td'); 
+                        
+                        if ($cols->item(0)->nodeValue !== "SUBASTAS" && $cols->item(1)->nodeValue !== ""){
+                            $resProdEmp = $conn->query("SELECT pem_id 
+                                                        FROM Productos_Empresas 
+                                                        Join Empresas on emp_id = pem_idemp
+                                                        Where pem_idpro = ".$f->pro_id." 
+                                                          and Upper(emp_etiqueta) = Upper('".$cols->item(0)->nodeValue."')");
+                            $prodEmp = $resProdEmp->fetch_object();
+    
+                            $resPrecios = $conn->query("SELECT pre_id
+                                                        FROM Precios 
+                                                        Where pre_pro_emp = ".$prodEmp->pem_id." 
+                                                          and pre_fecha = '" . $Fecha . "'");
+                                                          
+                            $totalFilas = $resPrecios->num_rows;
+                            if ($totalFilas === 0) {
+                                $PrecioInsertado = $conn->query("INSERT INTO Precios (pre_pro_emp, pre_fecha) 
+                                                                 VALUES ('".$prodEmp->pem_id."', '".$Fecha."')");
+                                
+                                $consulta = "SELECT pre_id
+                                             FROM Precios 
+                                             Where pre_pro_emp = ".$prodEmp->pem_id." 
+                                               and pre_fecha = '".$Fecha."'";
+                                try {
+                                    $resPrecios2 = $conn->query($consulta);
+                                    $precio = $resPrecios2->fetch_object();
+                                } catch (Exception $e) {
+                                    echo 'Excepción capturada: ', $e->getMessage(), "\n";
+                                }
+                                
+                                if ($precio->pre_id > 0) {
+                                    $numCorte = 0;
+                                    foreach ($cols as $col){
+                                        if ($numCorte === 0){
+                                            $numCorte ++;
+                                        } elseif ($col->nodeValue !== "") {
+                                            $conn->query("INSERT INTO Cortes (cor_idpre, cor_corte, cor_precio) 
+                                                          VALUES ('".$precio->pre_id."', '".$numCorte."', '".$col->nodeValue."')");
+                                            $numCorte ++;
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                }
-                $contador ++;
-            } 
+                    $contador ++;
+                } 
+            }
         }
     }
 ?>
