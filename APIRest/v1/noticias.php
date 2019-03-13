@@ -19,7 +19,7 @@
                  FROM ( SELECT *
                         FROM Noticias
                         ORDER BY not_id DESC) D
-                  Limit 2 ";
+                  Limit 5 ";
     if ($offSet) {
       $consulta = $consulta . " OFFSET " . $offSet;
     }
