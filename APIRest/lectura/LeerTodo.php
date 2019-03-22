@@ -98,3 +98,18 @@
         }
     }
 ?>
+<html>
+    <header>
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- Banner 1 -->
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:320px;height:100px"
+                 data-ad-client="ca-pub-5306727526505710"
+                 data-ad-slot="8821370329"></ins>
+            <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+    </header>
+    <body>
+    </body>
+</html>
