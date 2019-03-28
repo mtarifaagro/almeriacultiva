@@ -79,14 +79,26 @@
                                 
                                 if ($precio->pre_id > 0) {
                                     $numCorte = 0;
+                                    $media = 0;
+                                    $nummedia = 0;
                                     foreach ($cols as $col){
                                         if ($numCorte === 0){
                                             $numCorte ++;
                                         } elseif ($col->nodeValue !== "") {
+                                            if ($numCorte <= 3) {
+                                                $media = $media + $col->nodeValue;
+                                                $nummedia++;
+                                            }
                                             $conn->query("INSERT INTO Cortes (cor_idpre, cor_corte, cor_precio) 
                                                           VALUES ('".$precio->pre_id."', '".$numCorte."', '".$col->nodeValue."')");
                                             $numCorte ++;
                                         }
+                                    }
+                                    if ($nummedia > 0){
+                                        $media = $media / $nummedia;
+                                        $conn->query("Update Precios
+                                                      Set pre_media3 = '".$precio->pre_id." 
+                                                      Where pre_id = '".$precio->pre_id."'");
                                     }
                                 }
                             }
@@ -98,18 +110,3 @@
         }
     }
 ?>
-<html>
-    <header>
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-            <!-- Banner 1 -->
-            <ins class="adsbygoogle"
-                 style="display:inline-block;width:320px;height:100px"
-                 data-ad-client="ca-pub-5306727526505710"
-                 data-ad-slot="8821370329"></ins>
-            <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-    </header>
-    <body>
-    </body>
-</html>
