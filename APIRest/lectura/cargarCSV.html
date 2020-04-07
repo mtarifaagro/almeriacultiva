@@ -1,0 +1,22 @@
+<html xml:lang="es-ES" lang="es-ES">
+<head>
+</head>
+<body>
+   <form method="post" action="cargarCSV.php" enctype="multipart/form-data">
+        <table align="center" >
+            <tr>
+                <td colspan="2">Seleccione el Archivo: </td>
+                <td>
+                    <input type="file" accept=".csv" name="archivo" size="10"/>
+                    <input type="hidden" value="cargar" name="action"/>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" colspan="5">
+                    <input type="submit" value="cargar csv"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>

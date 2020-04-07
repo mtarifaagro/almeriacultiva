@@ -1,0 +1,22 @@
+<html lang="es" class="artdeco android">
+  <head>
+  <link rel="stylesheet" href="estilos/div-descarga.css">
+  <script>
+    function mostrarDivApp() {
+
+      var dispositivo = navigator.userAgent.toLowerCase();
+      if( dispositivo.search(/iphone|ipod|ipad|android/) > -1 ){
+	       document.getElementById("app").innerHTML = "<div id='smartbanner-wormhole' class='xpromo-smart-banner xpromo-smart-banner--visible'><div id='ember410' class='xpromo-smart-banner__container display-flex ember-view'><button class='t-14 t-black--light t-normal' onclick='quitarDivApp()'><li-icon type='cancel-icon' size='small' role='img' aria-label='No, gracias'><svg viewBox='0 0 24 24' width='24px' height='24px' x='0' y='0' preserveAspectRatio='xMinYMin meet' class='artdeco-icon' focusable='false'><path d='M13,4.32L9.31,8,13,11.69,11.69,13,8,9.31,4.31,13,3,11.69,6.69,8,3,4.31,4.31,3,8,6.69,11.68,3Z' class='small-icon' style='fill-opacity: 1'></path></svg></li-icon></button><div class='xpromo-smart-banner__logo display-flex align-items-center ml2'><img src='https://media.licdn.com/dms/image/C5614AQFULY5nhEYldg/crossPromo-analyzedImage/0?e=1555592400&amp;v=beta&amp;t=-UjK5RkHSh73GqbGyHSJO5IBWow7Kv4j3f-auRu0DyU' class='xpromo-smart-banner__logo-img' width='76'></div><div class='display-flex flex-column ml3 pv1'><p class='t-16 t-black t-normal'>LinkedIn</p></div><div class='align-items-center display-flex mr2 mlA'><a href='https://play.google.com/store/apps/details?id=com.linkedin.android&amp;hl=en&amp;referrer=utm_source%3Dxpromo%26utm_campaign%3Dxpromo_mwbanner_flagship' id='ember412' class='t-16 t-black t-normal ember-view'>    INSTALAR</a></div></div></div>";
+      }
+    }
+
+    function quitarDivApp() {
+	    document.getElementById("app").innerHTML = "";
+    }
+  </script>
+  </head>
+  <body onload="mostrarDivApp()">
+    <body>
+      <div id="app"></div>
+  </body>
+</html>
