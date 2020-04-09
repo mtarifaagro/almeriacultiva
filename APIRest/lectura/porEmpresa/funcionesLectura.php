@@ -1,14 +1,12 @@
 <?php
     header("Content-Type: text/html");
 
-    use PHPMailer\PHPMailer\PHPMailer;
-    use PHPMailer\PHPMailer\Exception;
-
     require '../../utils/GoogleApi/PHPMailer/src/Exception.php';
     require '../../utils/GoogleApi/PHPMailer/src/PHPMailer.php';
     require '../../utils/GoogleApi/PHPMailer/src/SMTP.php';
+    
     include_once '../../includes/configBD.php';
-    include_once '../../includes/authenticated.php';
+    include_once '../../includes/mail.php';
 
     require("../simple_html_dom.php");
     
@@ -32,120 +30,114 @@
             exit();
         }
     
-        $auth = new Authenticate();
+        $dom = new domDocument;
+        $dom->loadHTML($sitioweb);
+        $dom->preserveWhiteSpace = false;
 
-        //$numRows = $auth->auth($conn);
-        //$conn->debug();
-        //if ($numRows == 1){
-    
-            $dom = new domDocument;
-            $dom->loadHTML($sitioweb);
-            $dom->preserveWhiteSpace = false;
-    
-            $fechaPagina = buscarFecha($dom, "fec");
+        $fechaPagina = buscarFecha($dom, "fec");
 
-            if (empty($fechaPagina)){
-                echo 'No se ha podido leer los precios. Por favor intentelo en unos minutos<br />';
-                exit();
-            }
-    
-            if ($fechaPagina === date("d-m-Y")){
+        if (empty($fechaPagina)){
+            echo 'No se ha podido leer los precios. Por favor intentelo en unos minutos<br />';
+            exit();
+        }
 
-                $tabla = buscarTabla($dom, 'sub-ver');
-                $rows = $tabla->item(0)->getElementsByTagName('tr');
-                $cargaOK = false;
-                foreach ($rows as $row){
+        if ($fechaPagina === date("d-m-Y")){
 
-                    $clase = $row->getAttribute('class');
-    
-                    if ($clase === 'lin-0' || $clase === 'lin-1'){
+            $tabla = buscarTabla($dom, 'sub-ver');
+            $rows = $tabla->item(0)->getElementsByTagName('tr');
+            $cargaOK = false;
+            foreach ($rows as $row){
 
-                        $cols = $row->getElementsByTagName('td');
-                        $etiqueta = $cols[0]->nodeValue . ' ';
-    
-                        $consulta = "SELECT pem_id
-                                     FROM Productos_Empresas
-                                     Join Productos on pro_id = pem_idpro
-                                     Where pem_idemp = " . $idEmpresa . " and Upper(pro_etiqueta) = Upper('" . $etiqueta . "')";
+                $clase = $row->getAttribute('class');
+
+                if ($clase === 'lin-0' || $clase === 'lin-1'){
+
+                    $cols = $row->getElementsByTagName('td');
+                    $etiqueta = $cols[0]->nodeValue . ' ';
+
+                    $consulta = "SELECT pem_id
+                                 FROM Productos_Empresas
+                                 Join Productos on pro_id = pem_idpro
+                                 Where pem_idemp = " . $idEmpresa . " and Upper(pro_etiqueta) = Upper('" . $etiqueta . "')";
+                    try {
+                        $resProdEmp = $conn->query($consulta);
+                        $prodEmp = $resProdEmp->fetch_object();
+                     } catch (mysqli_sql_exception $e) {
+                        echo 'Error<br/>';
+                        echo 'Excepción capturada: ', $e->getMessage(), "<br/>";
+                     }
+
+                    //echo '$prodEmp->pem_id -> ' . $prodEmp->pem_id . '<br/>';
+
+                    $consulta = "SELECT pre_id
+                                 FROM Precios
+                                 Where pre_pro_emp = " . $prodEmp->pem_id . "
+                                   and pre_fecha = '" . date("Y-m-d") . "'";
+
+                    $resPrecios = $conn->query($consulta);
+                    $totalFilas = $resPrecios->num_rows;
+
+                    //echo 'totalFilas -> ' . $totalFilas . '<br/>';
+                    if ($totalFilas === 0) {
+                        $cargaOK = true;
+                        //echo $etiqueta . ' -> ';
+                        $PrecioInsertado = $conn->query("INSERT INTO Precios (pre_pro_emp, pre_fecha)
+                                                         VALUES ('".$prodEmp->pem_id."', '". date("Y-m-d") ."')");
+
                         try {
-                            $resProdEmp = $conn->query($consulta);
-                            $prodEmp = $resProdEmp->fetch_object();
-                         } catch (mysqli_sql_exception $e) {
+                            $resPrecios2 = $conn->query("SELECT pre_id
+                                                         FROM Precios
+                                                         Where pre_pro_emp = ".$prodEmp->pem_id."
+                                                           and pre_fecha = '" . date("Y-m-d") . "'");
+                            $precio = $resPrecios2->fetch_object();
+                        } catch (Exception $e) {
                             echo 'Error<br/>';
                             echo 'Excepción capturada: ', $e->getMessage(), "<br/>";
-                         }
+                        }
 
-                        //echo '$prodEmp->pem_id -> ' . $prodEmp->pem_id . '<br/>';
-    
-                        $consulta = "SELECT pre_id
-                                     FROM Precios
-                                     Where pre_pro_emp = " . $prodEmp->pem_id . "
-                                       and pre_fecha = '" . date("Y-m-d") . "'";
-    
-                        $resPrecios = $conn->query($consulta);
-                        $totalFilas = $resPrecios->num_rows;
-
-                        //echo 'totalFilas -> ' . $totalFilas . '<br/>';
-                        if ($totalFilas === 0) {
-                            $cargaOK = true;
-                            //echo $etiqueta . ' -> ';
-                            $PrecioInsertado = $conn->query("INSERT INTO Precios (pre_pro_emp, pre_fecha)
-                                                             VALUES ('".$prodEmp->pem_id."', '". date("Y-m-d") ."')");
-    
-                            try {
-                                $resPrecios2 = $conn->query("SELECT pre_id
-                                                             FROM Precios
-                                                             Where pre_pro_emp = ".$prodEmp->pem_id."
-                                                               and pre_fecha = '" . date("Y-m-d") . "'");
-                                $precio = $resPrecios2->fetch_object();
-                             } catch (Exception $e) {
-                                echo 'Error<br/>';
-                                echo 'Excepción capturada: ', $e->getMessage(), "<br/>";
-                              }
-    
-                             if ($precio->pre_id > 0) {
-                               $numCorte = 0;
-                               foreach ($cols as $col){
-                                 if ($numCorte === 0){
-                                     $numCorte ++;
-                                  } elseif ($col->nodeValue !== "") {
-                                     echo $col->nodeValue . ' - ';
-                                     $conn->query("INSERT INTO Cortes (cor_idpre, cor_corte, cor_precio)
-                                                   VALUES ('".$precio->pre_id."', '".$numCorte."', '".$col->nodeValue."')");
-                                     $numCorte ++;
-                                  }
+                        if ($precio->pre_id > 0) {
+                            $numCorte = 0;
+                            foreach ($cols as $col){
+                                if ($numCorte === 0){
+                                    $numCorte ++;
+                                } elseif ($col->nodeValue !== "") {
+                                    //echo $col->nodeValue . ' - ';
+                                    $conn->query("INSERT INTO Cortes (cor_idpre, cor_corte, cor_precio)
+                                                  VALUES ('".$precio->pre_id."', '".$numCorte."', '".$col->nodeValue."')");
+                                    $numCorte ++;
                                 }
-                                //echo '<br/>';
-                             }
-    
-    
-                            $conn->query("UPDATE Precios
-                                          SET pre_media3 = (Select avg(cor_precio)
-                                                            From Cortes
-                                                            Where cor_corte <= 3
-                                                            and cor_idpre = pre_id )
-                                          Where pre_media3 is null");
-                            //echo '<br />';
-                         }
-                     }
-                 }
-    
-                if ($cargaOK){
-                    echo 'La carga de precios se ha fectuado correctamente.<br/>';
-                    $resp = enviarMail($url, $empresa, 'Los precios de '. $empresa .' se han cargado correctamente.');
-                    echo $resp;
-                } else {
-                    echo 'Los precios ya estan cargados.<br/>';
-                    $resp = enviarMail($url, $empresa, 'Los precios de '. $empresa .' ya estaban cargados.');
-                    echo $resp;
+                            }
+                             //echo '<br/>';
+                        }
+
+                        $conn->query("UPDATE Precios
+                                      SET pre_media3 = (Select avg(cor_precio)
+                                                        From Cortes
+                                                        Where cor_corte <= 3
+                                                        and cor_idpre = pre_id )
+                                      Where pre_media3 is null");
+                        //echo '<br />';
+                    }
                 }
-    
-            } else {
-                echo 'Los precios leidos son del ' . $fechaPagina . '. Aseguresé que hay subasta y que los precios están cargados.<br/>';
-                $resp = enviarMail($url, $empresa, 'Todavia no hay precios para '. $empresa);
-                echo $resp;
             }
-        //}
+             
+            enviarMail($cargaOK);
+            
+        } else {
+            echo 'Los precios leidos son del ' . $fechaPagina . '. Aseguresé que hay subasta y que los precios están cargados.<br/>';
+        }
+    }
+
+    function enviarMail($cargaOK) {
+        if ($cargaOK){
+            echo 'La carga de precios se ha fectuado correctamente.<br/>';
+            $resp = enviarMailCargaPrecios($url, $empresa, 'Los precios de '. $empresa .' se han cargado correctamente.');
+            echo $resp;
+        } else {
+            echo 'Los precios ya estan cargados.<br/>';
+            $resp = enviarMailCargaPrecios($url, $empresa, 'Los precios de '. $empresa .' ya estaban cargados.');
+            echo $resp;
+        }
     }
 
     function leerAlhondiga2($url, $idEmpresa, $empresa) {
@@ -165,125 +157,122 @@
             exit();
         }
     
-        //$auth = new Authenticate();
-        //$numRows = $auth->auth($conn);
-        //if ($numRows == 1){
+        $dom = new domDocument;
+        $dom->loadHTML($sitioweb);
+        $dom->preserveWhiteSpace = false;
     
-            $dom = new domDocument;
-            $dom->loadHTML($sitioweb);
-            $dom->preserveWhiteSpace = false;
+        $fechaPagina = buscarFecha($dom, "titNombreder");
     
-            $fechaPagina = buscarFecha($dom, "titNombreder");
-    
-            if ($fechaPagina){
-                echo 'No se ha podido leer los precios. Por favor intentelo en unos minutos<br />';
-                exit();
-            }
+        if ($fechaPagina){
+            echo 'No se ha podido leer los precios. Por favor intentelo en unos minutos<br />';
+            exit();
+        }
    
-            if ($fechaPagina === date("d-m-Y")){  
-                $tabla = buscarTabla($dom, 'precios_pro');
-                $rows = $tabla->item(1)->getElementsByTagName('tr');
-                $cargaOK = false;
-                foreach ($rows as $row){
+        if ($fechaPagina === date("d-m-Y")){  
+            $tabla = buscarTabla($dom, 'precios_pro');
+            $rows = $tabla->item(1)->getElementsByTagName('tr');
+            $cargaOK = false;
+            foreach ($rows as $row){
     
-                    $clase = $row->getAttribute('class');
-                    //echo $clase . '<br />';
+                $clase = $row->getAttribute('class');
+                //echo $clase . '<br />';
     
-                    if ($clase != 'familias_subasta' ){
+                if ($clase != 'familias_subasta' ){
     
-                        $cols = $row->getElementsByTagName('td');
-                        $etiqueta = $cols[0]->nodeValue;
+                    $cols = $row->getElementsByTagName('td');
+                    $etiqueta = $cols[0]->nodeValue;
     
-                        $consulta = "SELECT pem_id
-                                     FROM Productos_Empresas
-                                     Join Productos on pro_id = pem_idpro
-                                     Where pem_idemp = " . $idEmpresa . " and Upper(pro_etiqueta) = Upper('" . $etiqueta . "')";
+                    $consulta = "SELECT pem_id
+                                 FROM Productos_Empresas
+                                 Join Productos on pro_id = pem_idpro
+                                 Where pem_idemp = " . $idEmpresa . " and Upper(pro_etiqueta) = Upper('" . $etiqueta . "')";
     
-                        //echo $consulta . '<br/>';
+                    //echo $consulta . '<br/>';
+                    try {
+                        $resProdEmp = $conn->query($consulta);
+                        $prodEmp = $resProdEmp->fetch_object();
+                     } catch (Exception $e) {
+                        echo 'Error<br/>';
+                        echo 'Excepción capturada: ', $e->getMessage(), "<br/>";
+                     }
+    
+                    //echo '$prodEmp->pem_id -> ' . $prodEmp->pem_id . '<br/>';
+    
+                    $consulta = "SELECT pre_id
+                                 FROM Precios
+                                 Where pre_pro_emp = " . $prodEmp->pem_id . "
+                                   and pre_fecha = '" . date("Y-m-d") . "'";
+    
+                    $resPrecios = $conn->query($consulta);   
+                    $totalFilas = $resPrecios->num_rows;
+                    //echo 'totalFilas -> ' . $totalFilas . '<br/>';
+                    if ($totalFilas === 0) {
+                        $cargaOK = true;
+                        //echo $etiqueta . ' -> ';
+                        $PrecioInsertado = $conn->query("INSERT INTO Precios (pre_pro_emp, pre_fecha)
+                                                         VALUES ('".$prodEmp->pem_id."', '". date("Y-m-d") ."')");
+    
                         try {
-                            $resProdEmp = $conn->query($consulta);
-                            $prodEmp = $resProdEmp->fetch_object();
-                         } catch (Exception $e) {
+                            $resPrecios2 = $conn->query("SELECT pre_id
+                                                         FROM Precios
+                                                         Where pre_pro_emp = ".$prodEmp->pem_id."
+                                                           and pre_fecha = '" . date("Y-m-d") . "'");
+                            $precio = $resPrecios2->fetch_object();
+                        } catch (Exception $e) {
                             echo 'Error<br/>';
                             echo 'Excepción capturada: ', $e->getMessage(), "<br/>";
-                         }
+                        }
     
-                        //echo '$prodEmp->pem_id -> ' . $prodEmp->pem_id . '<br/>';
-    
-                        $consulta = "SELECT pre_id
-                                     FROM Precios
-                                     Where pre_pro_emp = " . $prodEmp->pem_id . "
-                                       and pre_fecha = '" . date("Y-m-d") . "'";
-    
-                        $resPrecios = $conn->query($consulta);   
-                        $totalFilas = $resPrecios->num_rows;
-                        //echo 'totalFilas -> ' . $totalFilas . '<br/>';
-                        if ($totalFilas === 0) {
-                            $cargaOK = true;
-                            //echo $etiqueta . ' -> ';
-                            $PrecioInsertado = $conn->query("INSERT INTO Precios (pre_pro_emp, pre_fecha)
-                                                             VALUES ('".$prodEmp->pem_id."', '". date("Y-m-d") ."')");
-    
-                            try {
-                                $resPrecios2 = $conn->query("SELECT pre_id
-                                                             FROM Precios
-                                                             Where pre_pro_emp = ".$prodEmp->pem_id."
-                                                               and pre_fecha = '" . date("Y-m-d") . "'");
-                                $precio = $resPrecios2->fetch_object();
-                             } catch (Exception $e) {
-                                echo 'Error<br/>';
-                                echo 'Excepción capturada: ', $e->getMessage(), "<br/>";
-                             }
-    
-                             if ($precio->pre_id > 0) {
-                               $numCorte = 0;
-                               foreach ($cols as $col){
-                                 if ($numCorte === 0){
-                                     $numCorte ++;
-                                  } elseif ($col->nodeValue !== "-") {
-                                     echo $col->nodeValue . ' - ';
-                                     $conn->query("INSERT INTO Cortes (cor_idpre, cor_corte, cor_precio)
+                        if ($precio->pre_id > 0) {
+                            $numCorte = 0;
+                            foreach ($cols as $col){
+                                if ($numCorte === 0){
+                                    $numCorte ++;
+                                } elseif ($col->nodeValue !== "-") {
+                                     //echo $col->nodeValue . ' - ';
+                                    $conn->query("INSERT INTO Cortes (cor_idpre, cor_corte, cor_precio)
                                                    VALUES ('".$precio->pre_id."', '".$numCorte."', '".$col->nodeValue."')");
-                                     $numCorte ++;
-                                  }
+                                    $numCorte ++;
                                 }
-                                //echo '<br/>';
-                             }
+                            }
+                            //echo '<br/>';
+                        }
     
+                        $conn->query("UPDATE Precios
+                                      SET pre_media3 = (Select avg(cor_precio)
+                                                        From Cortes
+                                                        Where cor_corte <= 3
+                                                        and cor_idpre = pre_id )
+                                      Where pre_media3 is null");
+                        //echo '<br />';
+                     
+                        $numCorte = 0;
+                        foreach ($cols as $col){
+                            if ($numCorte === 0){
+                                $numCorte ++;
+                            } elseif ($col->nodeValue !== "") {
+                                //echo $col->nodeValue . ' - ';
+                                $conn->query("INSERT INTO Cortes (cor_idpre, cor_corte, cor_precio)
+                                             VALUES ('".$precio->pre_id."', '".$numCorte."', '".$col->nodeValue."')");
+                                 $numCorte ++;
+                            }
+                        }
+                        //echo '<br/>';
+                    }
+                }
+            }
     
-                            $conn->query("UPDATE Precios
-                                          SET pre_media3 = (Select avg(cor_precio)
-                                                            From Cortes
-                                                            Where cor_corte <= 3
-                                                            and cor_idpre = pre_id )
-                                          Where pre_media3 is null");
-                            //echo '<br />';
-                         }
-                     }
-                 }
-    
-                if ($cargaOK){
-                    echo 'La carga de precios se ha fectuado correctamente.<br/>';
-                    $resp = enviarMail($url, $empresa, 'Los precios de '. $empresa .' se han cargado correctamente.');
-                    echo $resp;
-                 } else {
-                    echo 'Los precios ya estan cargados.<br/>';
-                    $resp = enviarMail($url, $empresa, 'Los precios de '. $empresa .' ya estaban cargados.');
-                    echo $resp;
-                 }
-    
-             } else {
-                echo 'Los precios leidos son del ' . $fechaPagina . '. Aseguresé que hay subasta y que los precios están cargados.<br/>';
-                $resp = enviarMail($url, $empresa, 'Todavia no hay precios para '. $empresa);
-                echo $resp;
-             }
-        //}
+            enviarMail($cargaOK);
+
+        } else {
+            echo 'Los precios leidos son del ' . $fechaPagina . '. Aseguresé que hay subasta y que los precios están cargados.<br/>';
+        }
     }
 
     function curl($url, $ip, $puerto, &$error) {
 
         $proxy = $ip.':'.$puerto;
-        echo $proxy . '<br/>';
+        //echo $proxy . '<br/>';
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -328,45 +317,6 @@
 
         return $tables;
     }
-
-    function enviarMail($url, $empresa, $mensaje){
-
-        try {
-            $email     = 'contacto@almeriacultiva.com';
-            $password  = '2508Migue5';
-            $message   = $mensaje
-                         . '<br/><br/>'
-                         . 'Equipo de Almeria Cultiva <br>'
-                         . 'contacto@almeriacultiva.com';
-
-            // Configuring SMTP server settings
-            $mail = new PHPMailer(false);
-            //$mail = new PHPMailer(true);
-            $mail->isSMTP();
-            $mail->Host = 'ssl0.ovh.net';
-            $mail->Port = 465;
-            $mail->SMTPSecure = 'ssl';
-            $mail->SMTPAuth = true;
-            $mail->Username = $email;
-            $mail->Password = $password;
-            //$mail->SMTPDebug = 4;
-
-            // Email Sending Details
-            $mail->setFrom($email, 'Almeria Cultiva');
-            $mail->addAddress($email);
-            $mail->Subject = 'Carga de precios ' . $empresa . ' (' . date("Y-m-d") . ')';
-            $mail->msgHTML($message);
-
-            if (!$mail->send()){
-                return $mail->ErrorInfo;
-             }else{
-                return 'email ok <br/>';
-             }
-
-         } catch (Exception $e) {
-            return $mail->ErrorInfo;
-         }
-     }
 ?>
 <html xml:lang="es-ES" lang="es-ES">
   <head>
