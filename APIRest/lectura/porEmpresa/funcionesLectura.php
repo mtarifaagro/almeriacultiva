@@ -10,14 +10,14 @@
 
     require("../simple_html_dom.php");
     
-    $ip = '188.226.141.127';
+    $ip = '154.16.202.22';
     $puerto = '8080';
 
     function leerAlhondiga($url, $idEmpresa, $empresa) {
         $mensaje = '';
 
         global $ip, $puerto, $conn;
-        $sitioweb = curl($url, $ip, $puerto, $mensaje);
+        $sitioweb = curl($url, $ip, $puerto, $mensaje, false);
 
         $pos = strpos($sitioweb, 'Forbidden');
         if ($pos != false) {
@@ -135,8 +135,6 @@
             echo $resp;
         } else {
             echo 'Los precios ya estan cargados.<br/>';
-            $resp = enviarMailCargaPrecios($url, $empresa, 'Los precios de '. $empresa .' ya estaban cargados.');
-            echo $resp;
         }
     }
 
@@ -144,7 +142,7 @@
         $mensaje = '';
 
         global $ip, $puerto, $conn;
-        $sitioweb = curl($url, $ip, $puerto, $mensaje);
+        $sitioweb = curl($url, $ip, $puerto, $mensaje, true);
    
         $pos = strpos($sitioweb, 'Forbidden');
         if ($pos != false) {
@@ -269,19 +267,20 @@
         }
     }
 
-    function curl($url, $ip, $puerto, &$error) {
+    function curl($url, $ip, $puerto, &$error, $withProxy) {
 
         $proxy = $ip.':'.$puerto;
-        //echo $proxy . '<br/>';
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $url);
-        //curl_setopt($ch, CURLOPT_PROXY, $proxy);
+        //if ($withProxy)
+        //  curl_setopt($ch, CURLOPT_PROXY, $proxy);
+
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HEADER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_MAXREDIRS , 1000);
+        curl_setopt($ch, CURLOPT_MAXREDIRS , 10000);
 
         $info = curl_exec($ch);
         $error = curl_error($ch);
