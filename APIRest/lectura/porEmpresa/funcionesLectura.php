@@ -142,8 +142,8 @@
         $mensaje = '';
 
         global $ip, $puerto, $conn;
-        $sitioweb = curl($url, $ip, $puerto, $mensaje, true);
-   
+        $sitioweb = curl($url, $ip, $puerto, $mensaje, false);
+
         $pos = strpos($sitioweb, 'Forbidden');
         if ($pos != false) {
             echo 'Error al leer los precios. Por favor intentelo en unos minutos.<br />' . $sitioweb . '<br />';
@@ -161,7 +161,7 @@
     
         $fechaPagina = buscarFecha($dom, "titNombreder");
     
-        if ($fechaPagina){
+        if (empty($fechaPagina)){
             echo 'No se ha podido leer los precios. Por favor intentelo en unos minutos<br />';
             exit();
         }

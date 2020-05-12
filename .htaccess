@@ -1,1 +1,6 @@
 Options -Indexes
+
+RewriteEngine On
+RewriteCond %{HTTPS} !on
+# RewriteCond %{HTTP_HOST} ^api\.almeriacultiva\.com [NC] No se puede hacer por conflicto con CORS
+RewriteRule .? https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
